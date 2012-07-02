@@ -41,7 +41,7 @@
             style_sheets = toArray(global.document.styleSheets);
 
             while ( sheet = style_sheets.shift() ) {
-                sheet_media = sheet.media;
+                sheet_media = sheet.media.mediaText;
                 // if this sheet is disabled skip it
                 if ( sheet.disabled ) continue;
                 // if this sheet's media is specified and is NOT all or screen then skip it
