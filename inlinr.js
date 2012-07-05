@@ -69,7 +69,10 @@
         var matched_rules, rule, computed, style, property,
             used_values = {};
         // get the matched rules from all style sheets
-        matched_rules = toArray(global.getMatchedCSSRules(element));
+        matched_rules = global.getMatchedCSSRules(element);
+        // if nothing is matched we get null so bail out
+        if ( ! matched_rules ) return used_values;
+        matched_rules = toArray(matched_rules);
         // get the actual computed style
         //TODO: not supporting pseudo elements
         computed = global.getComputedStyle(element, null);
@@ -109,7 +112,7 @@
             for ( s in styles ) {
                 style_str += s + ':' + styles[s] + ';';
             }
-            el.setAttribute('style', style_str);
+            style_str && el.setAttribute('style', style_str);
             inlined += 1;
         }
         return inlined;
