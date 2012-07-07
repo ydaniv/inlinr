@@ -10,8 +10,6 @@
     }
 }(this, function (global) {
 
-    //TODO: add support for nested rules, i.e. CSSRule.parentRule for @media blocks
-
     // convert an array-like object to array
     function toArray (list) {
         return [].slice.call(list);
@@ -44,13 +42,26 @@
                 sheet_media = sheet.media.mediaText;
                 // if this sheet is disabled skip it
                 if ( sheet.disabled ) continue;
-                // if this sheet's media is specified and is NOT all or screen then skip it
-                if ( sheet_media.length &&
-                    ! (~ sheet_media.indexOf('screen') || ~ sheet_media.indexOf('all')) ) continue;
+                // if this sheet's media is specified and doesn't match the viewport then skip it
+                if ( sheet_media.length && ! global .matchMedia(sheet_media).matches ) continue;
                 // get the style rules of this sheet
                 rules = toArray(sheet.cssRules);
                 // loop the rules
                 while ( rule = rules.shift() ) {
+                    // if this is an @import rule
+                    if ( rule.stylesheet ) {
+                        // add the imported stylesheet to the stylesheets array
+                        style_sheets.push(rule.stylesheet);
+                        // and skip this rule
+                        continue;
+                    }
+                    // if there's no stylesheet attribute BUT there IS a media attribute it's a media rule
+                    else if ( rule.media ) {
+                        // add this rule to the stylesheets array since it quacks like a stylesheet (has media & cssRules attributes)
+                        style_sheets.push(rule);
+                        // and skip it
+                        continue
+                    }
                     //TODO: for now only polyfilling Gecko
                     // check if this element matches this rule's selector
                     if ( element.mozMatchesSelector(rule.selectorText) ) {
