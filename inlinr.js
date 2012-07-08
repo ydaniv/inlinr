@@ -74,6 +74,13 @@
         };
     }
 
+    // replaces all rgb() color format occurrences to their HEX representations
+    function rgbToHex (str) {
+        return str.replace(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/g, function (match, r, g, b) {
+            return '#' + (+r).toString(16) + (+g).toString(16) + (+b).toString(16);
+        });
+    }
+
     // returns a map of style properties, which are used in author style sheets,
     // to their values for a given element
     function getUsedValues (element) {
@@ -124,7 +131,7 @@
             for ( s in styles ) {
                 style_str += s + ':' + styles[s] + ';';
             }
-            style_str && el.setAttribute('style', style_str);
+            style_str && el.setAttribute('style', rgbToHex(style_str));
             inlined += 1;
         }
         return inlined;
