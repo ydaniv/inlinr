@@ -83,7 +83,8 @@
         matched_rules = global.getMatchedCSSRules(element);
         // if nothing is matched we get null so bail out
         if ( ! matched_rules ) return used_values;
-        matched_rules = toArray(matched_rules);
+        // convert the matched rules into an Array and reverse it since it should be ordered in the cascade order
+        matched_rules = toArray(matched_rules).reverse();
         // get the actual computed style
         //TODO: not supporting pseudo elements
         computed = global.getComputedStyle(element, null);
