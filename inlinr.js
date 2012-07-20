@@ -74,10 +74,20 @@
         };
     }
 
+    // prefix the number with a 0 if it's a single digit
+    function prefix0 (number_str) {
+        return number_str.length < 2 ? '0' + number_str : number_str;
+    }
+
+    // takes a number or a string representation of a number and return a string of it in Hex radix
+    function toHex (num) {
+        return (+num).toString(16);
+    }
+
     // replaces all rgb() color format occurrences to their HEX representations
     function rgbToHex (str) {
         return str.replace(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/g, function (match, r, g, b) {
-            return '#' + (+r).toString(16) + (+g).toString(16) + (+b).toString(16);
+            return '#' + prefix0(toHex(r)) + prefix0(toHex(g)) + prefix0(toHex(b));
         });
     }
 
