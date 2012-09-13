@@ -110,11 +110,13 @@
         while ( rule = matched_rules.pop() ) {
             //for each rule convert rule.style into an array
             style = toArray(rule.style);
-            // loop over the array of style properties
+            // loop over the array of style properties that were defined in any of the stylesheets
             while ( property = style.shift() ) {
-                // if it's not in used_values and its value equals computed[property]
-                if ( ! (property in used_values) && rule.style.getPropertyValue(property) === computed.getPropertyValue(property) ) {
-                    used_values[property] = rule.style.getPropertyValue(property);
+                // if it's not in used_values
+                if ( ! (property in used_values) ) {
+                    // take the used value and add it to the list  
+                    // we have to take the used value calculated by the browser
+                    used_values[property] = computed.getPropertyValue(property);
                 }
             }
         }
@@ -136,14 +138,19 @@
 
         // loop over the elements
         while ( el = elements.shift() ) {
+            // pick all the used values that were set in any of the stylesheets
             styles = getUsedValues(el);
             style_str = '';
+            // loop over the rules
             for ( s in styles ) {
+                // build a "cssText" string
                 style_str += s + ':' + styles[s] + ';';
             }
+            // inline it - set it to the style attribute of the element
             style_str && el.setAttribute('style', rgbToHex(style_str));
             inlined += 1;
         }
+        // returned the number of inlined elements, just for reference
         return inlined;
     }
 
