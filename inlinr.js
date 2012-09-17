@@ -123,9 +123,8 @@
         return used_values;
     }
 
-    // inlines styles for a given element[s]
-    function inline (elements, context, keep_inlined) {
-        var el, styles, style_str, s, inlined = 0;
+    function process (elements, context, do_inline) {
+        var el, styles, style_str, s, inlined = [];
 
         if ( typeof elements === 'string' ) {
             //get the elements if it's only a selector
@@ -146,15 +145,31 @@
                 // build a "cssText" string
                 style_str += s + ':' + styles[s] + ';';
             }
-            // inline it - set it to the style attribute of the element
-            style_str && el.setAttribute('style', rgbToHex(style_str));
-            inlined += 1;
+            if ( style_str ) {
+                style_str = rgbToHex(style_str);
+                // whether to actually set the style attribute
+                if ( do_inline ) {
+                    // inline it - set it to the style attribute of the element
+                    style_str && el.setAttribute('style', style_str);
+                }
+            }
+            inlined.push(style_str);
         }
         // returned the number of inlined elements, just for reference
         return inlined;
     }
 
+    // inlines styles for a given element[s]
+    function inline (elements, context) {
+        return process(elements, context, true);
+    }
+
+    function calculate (elements, context) {
+        return process(elements, context, false);
+    }
+
     return {
-        inline  : inline
+        inline      : inline,
+        calculate   : calculate 
     };
 }));
