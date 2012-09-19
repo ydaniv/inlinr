@@ -7,8 +7,8 @@ What?
 =====
 
 Inlinr is a simple tool that takes all the stylesheets included in a web page,
-finds all the rules in them that apply to a given element(s), finds the used value for every style property for that element(s)
-and sets those properties to the style attribute of that element(s).
+finds all the rules in them that apply to a given element(s), finds the value for every style property for that element(s)
+and sets those properties and values to the style attribute of that element(s).
 
 In short, it inlines all the style properties of an element.
 
@@ -23,9 +23,8 @@ How?
 ====
 
 Inlinr gets all matched CSS rules on an element using Webkit's `window.getMatchedCSSRules()` or its
-[polyfill for FireFox](https://gist.github.com/3033012 "mozGetMatchedCSSRules.js"). Then it takes the "used values" for that
-element using `window.getComputedStyle()` and applies all those properties in the matched rules that are equal to the
-computed ones.
+[polyfill for FireFox 6+](https://gist.github.com/3033012 "mozGetMatchedCSSRules.js"). Then it can either take the original [specified values](http://www.w3.org/TR/CSS21/cascade.html#specified-value),
+or the [used values](http://www.w3.org/TR/CSS21/cascade.html#used-value) for that element using `window.getComputedStyle()`, builds a long CSS string and puts it into that element's [style] attribute.
 
 Installing
 ==========
@@ -51,6 +50,18 @@ selector for matching multiple elements.
 
 `parent` is an optional argument that can be used for narrowing down the query, if `element` is a selector.
 `parent` can also be an element or a selector.
+
+Should you want to inline the specified values just configure it first before each call:
+
+    Inlinr.configure({ use_specified : true }).inline(element, parent)
+
+Should you want to *NOT* inline styles but simply get back an `Array` of style strings corresponding to the list of elements
+you supplied to `inline` then use `calculate`:
+
+    Inline.calculate(elements)
+
+If `elements` is a single `HTMLElement` then it's treated as an `Array` with a length of 1.
+If `elements` is a selector `String` then you'll get back an `Array` of containing the selected elements and all their descendants/
 
 License
 =======
