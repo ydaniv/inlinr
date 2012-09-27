@@ -233,7 +233,7 @@
         // loop over the matched rules from the end since they should come in cascade ascending order
         // i.e.: last one is most important
         while ( rule = matched_rules.pop() ) {
-            style_text = rule.cssText;
+            style_text = rule.style.cssText;
             //for each rule parse and tokenize the cssText into style properties
             properties = style_text.split(';').map(function (item) { return item.split(':'); });
             // loop over the array of style properties that were defined in any of the stylesheets
