@@ -226,22 +226,22 @@
     function getSpecifiedValues (element) {
         var matched_rules = getMatchedRules(element),
             values = {},
-            rule, style, properties, property;
+            rule, style_text, properties, property;
         // if nothing is matched we get null so bail out
         if ( ! matched_rules ) return values;
 
         // loop over the matched rules from the end since they should come in cascade ascending order
         // i.e.: last one is most important
         while ( rule = matched_rules.pop() ) {
-            style = rule.style;
-            //for each rule convert rule.style into an array
-            properties = toArray(style);
+            style_text = rule.cssText;
+            //for each rule parse and tokenize the cssText into style properties
+            properties = style_text.split(';').map(function (item) { return item.split(':'); });
             // loop over the array of style properties that were defined in any of the stylesheets
             while ( property = properties.shift() ) {
                 // if it's not in `values`
-                if ( ! (property in values) ) {
-                    // take the value and add it to the list  
-                    values[property] = style.getPropertyValue(property);
+                if ( property[0] && ! (property[0] in values) ) {
+                    // take the value and add it to the list
+                    values[property[0]] = property[1];
                 }
             }
         }
