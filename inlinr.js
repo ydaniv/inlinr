@@ -199,7 +199,8 @@
     // to their values for a given element
     function getUsedValues (element) {
         var matched_rules = getMatchedRules(element),
-            values = {},
+            values = [],
+            used = {},
             rule, computed, style, property;
         // if nothing is matched we get null so bail out
         if ( ! matched_rules ) return values;
@@ -214,9 +215,11 @@
             // loop over the array of style properties that were defined in any of the stylesheets
             while ( property = style.shift() ) {
                 // if it's not in `values`
-                if ( ! (property in values) ) {
-                    // take the used value and add it to the list  
-                    values[property] = computed.getPropertyValue(property);
+                if ( ! used[property] ) {
+                    // take the used value and add it to the list as a CSS name-value pair
+                    values.unshift(property + ':' + computed.getPropertyValue(property));
+                    // make sure we don't repeat setting it
+                    used[property] = true;
                 }
             }
         }
@@ -225,7 +228,8 @@
 
     function getSpecifiedValues (element) {
         var matched_rules = getMatchedRules(element),
-            values = {},
+            values = [],
+            used = {},
             rule, style_text, properties, property;
         // if nothing is matched we get null so bail out
         if ( ! matched_rules ) return values;
@@ -238,10 +242,12 @@
             properties = style_text.split(';').map(function (item) { return item.split(':'); });
             // loop over the array of style properties that were defined in any of the stylesheets
             while ( property = properties.shift() ) {
-                // if it's not in `values`
-                if ( property[0] && ! (property[0] in values) ) {
-                    // take the value and add it to the list
-                    values[property[0]] = property[1];
+                // if it's not in `used` values
+                if ( property[0] && ! used[property[0]] ) {
+                    // add this name-value pair to the list of values
+                    values.unshift(property.join(':'));
+                    // make sure we don't repeat setting it
+                    used[property[0]] = true;
                 }
             }
         }
@@ -263,15 +269,11 @@
 
         // loop over the elements
         while ( el = elements.shift() ) {
-            // pick all the values that were set in any of the stylesheets
-            styles = getValues(el);
-            style_str = '';
-            // loop over the rules
-            for ( s in styles ) {
-                // build a "cssText" string
-                style_str += s + ':' + styles[s] + ';';
-            }
+            // pick all the values that were set in any of the stylesheets and generate the CSS text value
+            style_str = getValues(el).join(';');
+            // if it has any length
             if ( style_str ) {
+                // translate all colors to Hex
                 style_str = rgbToHex(style_str);
                 // whether to actually set the style attribute
                 if ( do_inline ) {
