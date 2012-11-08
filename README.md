@@ -63,6 +63,12 @@ you supplied to `inline` then use `calculate`:
 If `elements` is a single `HTMLElement` then it's treated as an `Array` with a length of 1.
 If `elements` is a selector `String` then you'll get back an `Array` of containing the selected elements and all their descendants/
 
+Support
+=======
+
+Webkit browsers
+Firefox 6+
+
 License
 =======
 
