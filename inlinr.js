@@ -78,27 +78,27 @@
                 match = _find(part, PSEUDO_ELEMENTS_RE);
                 score[2] = match;
                 // and remove them
-                match && part.replace(PSEUDO_ELEMENTS_RE, '');
+                match && (part = part.replace(PSEUDO_ELEMENTS_RE, ''));
                 // find all pseudo-classes
                 match = _find(part, PSEUDO_CLASSES_RE);
                 score[1] = match;
                 // and remove them
-                match && part.replace(PSEUDO_CLASSES_RE, '');
+                match && (part = part.replace(PSEUDO_CLASSES_RE, ''));
                 // find all attributes
                 match = _find(part, ATTR_RE);
                 score[1] += match;
                 // and remove them
-                match && part.replace(ATTR_RE, '');
+                match && (part = part.replace(ATTR_RE, ''));
                 // find all IDs
                 match = _find(part, ID_RE);
                 score[0] = match;
                 // and remove them
-                match && part.replace(ID_RE, '');
+                match && (part = part.replace(ID_RE, ''));
                 // find all classes
                 match = _find(part, CLASS_RE);
                 score[1] += match;
                 // and remove them
-                match && part.replace(CLASS_RE, '');
+                match && (part = part.replace(CLASS_RE, ''));
                 // find all elements
                 score[2] += _find(part, ELEMENT_RE);
             }
