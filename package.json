@@ -1,6 +1,6 @@
 {
     "amd"   : {},
     "volo"  : {
-        "main"  : "inlinr.js"
+        "main"  : "inlinr"
     }
 }
